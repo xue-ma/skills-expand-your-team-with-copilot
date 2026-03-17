@@ -569,6 +569,12 @@ document.addEventListener("DOMContentLoaded", () => {
         `
         }
       </div>
+      <div class="share-section">
+        <span class="share-label">Share:</span>
+        <button class="share-button share-twitter" title="Share on X (Twitter)">𝕏</button>
+        <button class="share-button share-whatsapp" title="Share on WhatsApp">💬</button>
+        <button class="share-button share-copy" title="Copy link">🔗</button>
+      </div>
     `;
 
     // Add click handlers for delete buttons
@@ -586,6 +592,35 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
     }
+
+    // Add click handlers for share buttons
+    const shareText = `Check out ${name} at Mergington High School! ${details.description}`;
+    const shareUrl = window.location.href;
+
+    activityCard.querySelector(".share-twitter").addEventListener("click", () => {
+      const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+      window.open(twitterUrl, "_blank", "noopener,noreferrer");
+    });
+
+    activityCard.querySelector(".share-whatsapp").addEventListener("click", () => {
+      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText + "\n" + shareUrl)}`;
+      window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+    });
+
+    activityCard.querySelector(".share-copy").addEventListener("click", (e) => {
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        const btn = e.currentTarget;
+        btn.textContent = "✓";
+        btn.title = "Copied!";
+        setTimeout(() => {
+          btn.textContent = "🔗";
+          btn.title = "Copy link";
+        }, 2000);
+      }).catch(() => {
+        const btn = e.currentTarget;
+        btn.title = "Could not copy — please copy the URL manually";
+      });
+    });
 
     activitiesList.appendChild(activityCard);
   }
